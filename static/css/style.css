@@ -1,0 +1,59 @@
+body{
+    background: url(https://sun9-37.userapi.com/c856524/v856524834/16b90d/RciFZHBAeAg.jpg);
+    -moz-background-size: 100%;
+    -webkit-background-size: 100%;
+    -o-background-size: 100%;
+    background-size: 100%;
+    }
+form.prof {
+    max-width: 450px;
+    color-text: #b0b7c6;
+    background-color: #8a795d;
+    border: 10px solid black;
+    border-radius: 5px;
+    padding: 10px;
+}
+div.textsss {
+    color: #b0b7c6;
+    font-size: 120%
+}
+img.ava {
+    float: left;
+    padding-bottom: 10px;
+}
+h4 {
+    margin-left: 20px;
+    color: #b0b7c6;
+}
+form.info{
+    color: #f50029;
+    background-color: #b57281;
+    border: 5px solid black;
+    border-radius: 5px;
+    padding: 5px;
+    margin-right: 600px;
+}
+
+IMG.mars {
+    float: left;
+    padding-bottom: 10px;
+}
+div.inf{
+   min-width: 650px;
+   min-height: 650px;
+}
+form.du_login{
+    color: #b0b7c6;
+    max-width: 650px;
+    max-height: 1040px;
+    color-text: #fffff;
+    border: 1px solid gray;
+    border-radius: 2px;
+    padding: 2px;
+}
+p.tet, h2{
+    text-align:center
+}
+td.full_g{
+    background-color: gray;
+}

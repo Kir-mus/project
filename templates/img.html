@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form class="collapse navbar-collapse" action="" method="post">
+    {{ form.hidden_tag() }}
+    <fieldset>
+    <input type="file" class="inputFile" id="photo" name="file" multiple><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    {{ form.FILE.label }}<br>
+        {{ form.FILE(class="form-control") }}<br>
+        <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+
+    <img  src='#photo'>
+    </fieldset>
+</form>
+
+{% endblock %}

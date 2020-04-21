@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+  <!-- Optional theme -->
+    <style>body{
+    background: url(https://sun9-37.userapi.com/c856524/v856524834/16b90d/RciFZHBAeAg.jpg);
+    -moz-background-size: 100%;
+    -webkit-background-size: 100%;
+    -o-background-size: 100%;
+    background-size: 100%;
+    }</style>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href='/static/css/style.css' />
+    <title>{{title}}</title>
+</head>
+<body style="background-attachment:fixed" topmargin="0">
+<nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+              <span class="sr-only">Навигация</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+        <a class="navbar-brand" href="/">{{inform.name}}</a>
+      </div>
+    {% if current_user.is_authenticated %}
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <div class="container">
+  <ul class="nav nav-pills" role="tablist">
+    <li><a href="#home" role="tab" data-toggle="pill">Catalog</a></li>
+      <li><a href="/login">Войти в другой акаунт</a></li>
+      <li><a class="nav navbar-brand" href="/profile/{{inform.id}}">{{ current_user.name }}</a></li>
+      <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+                {% for item in id_treners %}
+                <li><form class="collapse navbar-collapse">
+
+                    <img width="50" height="50" src="{{id_treners[item][3]}}">№{{item}}
+                    <h3>{{id_treners[item][0]}}</h3>
+                    <h3>{{id_treners[item][1]}}</h3>
+                    <footer>телефон: <br>{{id_treners[item][5]}}</footer>
+                    <p>Возраст {{id_treners[item][2]}}</p>
+                    <h5>{{id_treners[item][4]}}</h5>
+                </form></li>
+                <li class="divider"></li>
+                {% endfor %}
+            </ul></li>
+  </ul>
+
+  <div class="tab-content">
+    <div role="tabpanel" class="tab-pane fade in" id="home">
+        <nav class="navbar navbar-default" role="navigation">
+        <ul class="nav nav-pills" role="tablist">
+        {%for item in categorid%}
+            <li><footer>№{{item}}</footer>
+        <a  class="btn btn-info" href='/catalog/{{item}}'>{{categorid[item][0]}}</a></li>
+        {% endfor %}
+        </ul>
+            </nav>
+    </div>
+
+</div>
+      </div>
+{% else %}
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="/register">Зарегистрироваться</a></li>
+          <li><a href="/login">Войти</a></li>
+
+        </ul>
+      </div>
+    </div>
+
+{% endif %}
+    </div>
+</nav>
+
+<!-- Begin page content -->
+<main role="main" class="container">
+    {% block content %}{% endblock %}
+</main>
+<br><br><br><br><br><br>
+<nav class="navbar" role="navigation">
+    <div class="container-fluid">
+<div class="collapse navbar-collapse" >
+    <ul class="nav navbar-nav">
+        <li class="divider"></li>
+        <li><footer>&copy; Все права защишены 2020</footer></li>
+        </ul>
+    <ul class="nav navbar-nav navbar-right">
+        <li><footer>Телефон {{inform.telefon}}</footer></li>
+        </ul>
+</div>
+      </div>
+</nav>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>

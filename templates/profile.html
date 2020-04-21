@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% set sal = user.my_img %}
+    <div class="row">
+        <div class='col-md-2'>
+        </div>
+        <div class='col-md-10'>
+    <form class="prof">
+        <nav><img class="img-circle" width="100px" height="100px" src={{sal}}><h1>PROFILE</h1></nav>
+    <div class="row">
+        <div class='col-md-4'>
+            <label>login</label>
+            <h1>{{user.login}}</h1>
+            <div class="col-md-12"><h3>{{user.age}} лет</h3>
+            </div>
+        </div>
+        <div class='col-md-4'>
+            <label>name</label>
+            <h1>{{user.name}}</h1>
+            <div class="col-md-12">
+                <footer>Почта</footer>
+            {{user.email}}
+            </div>
+        </div>
+        <div class='col-md-4'>
+            <label>surname</label>
+            <h1>{{user.surname}}</h1>
+            <div><label>address</label>
+                <footer>{{user.address}}</footer></div>
+        </div>
+    </div>
+    </form>
+            <button class="btn btn-info" data-toggle="modal" data-target="#Modal_cor">Корзина</button>
+<div id="Modal_cor" class="modal fade" tabindex="-1">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">х</button>
+        <h4 class="modal-title">Корзина</h4>
+      </div>
+      <div class="modal-body">
+        {% for item in lists_bascket %}
+    <form class="prof" action="" method="post">
+        <footer>{{item}}</footer>
+        <img width="100px" height="100px" src={{lists_bascket[item][1]}}>
+        <h4>{{lists_bascket[item][0]}}</h4>
+        <h6>{{lists_bascket[item][2]}}</h6>
+        <footer>{{lists_bascket[item][3]}}</footer>
+        <footer>{{lists_bascket[item][4]}}</footer>
+        <a href="/buy/{{current_user.id}}/{{item}}">Buy</a>
+    </form>
+    <br> <br> <br> <br>
+    {% endfor %}
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-danger" data-dismiss="modal">Закрыть</button>
+      </div>
+    </div>
+  </div>
+</div>
+            <button class="btn btn-info" data-toggle="modal" data-target="#modal_cic">История покупок</button>
+<div id="modal_cic" class="modal fade" tabindex="-1">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">х</button>
+        <h4 class="modal-title">История покупок</h4>
+      </div>
+      <div class="modal-body">
+        {% for item in stor %}
+    <form class=" collapse navbar-collapse prof" action="" method="post">
+
+        <nav><img width="50px" height="50px" src={{stor[item][1].product_img}}><footer>{{item}}{{stor[item][2]}}</footer></nav>
+        <nav class="navbar navbar-default" role="navigation"><div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+            <ul><li class="divider"></li><li>{{stor[item][1].name}}</li>
+            <li>{{stor[item][1].info}}</li>
+            <li>{{stor[item][1].coin}}</li>
+       </ul>
+        </div></nav>
+    </form>
+    <br> <br> <br> <br>
+    {% endfor %}
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-danger" data-dismiss="modal">Закрыть</button>
+      </div>
+    </div>
+  </div>
+</div>
+        </div>
+    </div>
+
+<!--histor-->
+<!-- jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+
+{% endblock %}

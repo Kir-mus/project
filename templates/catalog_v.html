@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>{{title}}</h1>
+    {% for item in product_data %}
+    <form class="prof" action="" method="post">
+        <footer>№{{item}}</footer>
+        <img width="100px" height="100px" src={{product_data[item][1]}}>
+        <h4>{{product_data[item][0]}} </h4>
+        <h6>info:{{product_data[item][2]}}</h6>
+        <footer>{{product_data[item][3]}}руб</footer>
+        <footer>{{product_data[item][4]}} - осталось</footer>
+        <a class="btn" href="catalog/{{categories.id}}/in_bascket/{{item}}">add --> |_|</a>
+    </form>
+    <br> <br> <br> <br>
+    {% endfor %}
+{% endblock %}

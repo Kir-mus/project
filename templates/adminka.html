@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-4">
+    <form class="collapse navbar-collapse du_login" action="" method="post">
+        <h2>Редактировать информацию</h2>
+        {{ form.hidden_tag() }}
+        <nav class="navbar navbar-default" role="navigation">
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+        <li>
+            {{ form.name.label }}<br>
+            {{ form.name(class="form-control") }}   <br>
+            </li>
+            <li>{{ form.admin.label }}
+                {{ form.admin(class="form-control") }}  <br>
+            </li>
+            <li>{{ form.telefon.label }}<br>
+            {{ form.telefon(class="form-control") }}   <br>
+            </li>
+        </ul></div>
+            <br>
+        {{ form.start_text(class="form-control du") }}{{ form.start_text.label }}
+
+            {{ form.derektor(class="form-control") }}{{ form.derektor.label }}<br>
+
+        <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+        {% if message != None %}<div class="alert alert-danger" role="alert">{{ message }}</div>{% endif %}
+        </nav>
+    </form>
+        </div>
+        <div class="col-md-4">
+            <form class="collapse navbar-collapse du_login" action="" method="post">
+            <h2>Добавление продукта</h2>
+        {{ form_product.hidden_tag() }}
+                <nav class="navbar navbar-default" role="navigation">
+        <div class="collapse navbar-collapse" >
+        <ul class="nav navbar-nav">
+        <li>
+            {{ form_product.name.label }}<br>
+            {{ form_product.name(class="form-control") }}   <br>
+            </li>
+
+            <li>{{ form_product.coin.label }}
+                {{ form_product.coin(class="form-control") }}  <br>
+            {{ form_product.count.label }}
+                {{ form_product.count(class="form-control") }}  <br>
+            </li>
+
+            <li>{{ form_product.info.label }}<br>
+            {{ form_product.info(class="form-control") }}   <br>
+            </li>
+        </ul></div>
+            <br>
+        <p>{{ form_product.submit(type="submit", class="btn btn-primary") }}</p>
+        {% if message_2 != None %}<div class="alert alert-danger" role="alert">{{ message_2 }}</div>{% endif %}
+                </nav>
+                <!--categories-->
+    </form>
+            <form class="collapse navbar-collapse du_login" action="" method="post">
+            <h2>Добавление категории</h2>
+        {{ form_categories.hidden_tag() }}
+                <nav class="navbar navbar-default" role="navigation">
+        <div class="collapse navbar-collapse" >
+        <ul class="nav navbar-nav">
+        <li>
+            {{ form_categories.name.label }}<br>
+            {{ form_categories.name(class="form-control") }}   <br>
+            </li>
+
+            <li>{{ form_categories.products.label }}
+                {{ form_categories.products(class="form-control") }}  <br>
+            </li>
+        </ul></div>
+            <br>
+        <p>{{ form_categories.submit(type="submit", class="btn btn-primary") }}</p>
+        {% if message_4 != None %}<div class="alert alert-danger" role="alert">{{ message_4 }}</div>{% endif %}
+                </nav>
+    </form>
+        </div>
+        <div class="col-md-4">
+            <form class="collapse navbar-collapse du_login" action="" method="post">
+            <h2>Добавление тренера</h2>
+        {{ form_trainer.hidden_tag() }}
+                <nav class="navbar navbar-default" role="navigation">
+        <div class="collapse navbar-collapse" >
+        <ul class="nav navbar-nav">
+        <li>
+            {{ form_trainer.name.label }}<br>
+            {{ form_trainer.name(class="form-control") }}   <br>
+            </li>
+
+            <li>{{ form_trainer.surname.label }}
+                {{ form_trainer.surname(class="form-control") }}  <br>
+            {{ form_trainer.email.label }}
+                {{ form_trainer.email(class="form-control", type="email")}}  <br>
+            </li>
+
+            <li>{{ form_trainer.age.label }}<br>
+            {{ form_trainer.age(class="form-control") }}   <br>
+            </li>
+            <li>{{ form_trainer.telefon.label }}<br>
+            {{ form_trainer.telefon(class="form-control") }}   <br>
+            </li>
+        </ul></div>
+            <br>
+        <p>{{ form_trainer.submit(type="submit", class="btn btn-primary") }}</p>
+        {% if message_3 != None %}<div class="alert alert-danger" role="alert">{{ message_3 }}</div>{% endif %}
+                </nav>
+    </form>
+        </div>
+        </div>
+{% endblock %}
