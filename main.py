@@ -64,9 +64,13 @@ def pass_catal():
     for cate in session.query(Categories):
         categorid[str(cate.id)] = [cate.name, cate.products]
         for prod in cate.products.split(', '):
-            id_product_list.append(int(prod))
-        list_product[str(cate.id)] = id_product_list
-        id_product_list = []
+            try:
+                id_product_list.append(int(prod))
+                list_product[str(cate.id)] = id_product_list
+                id_product_list = []
+            except Exception as er:
+                abort(404, message=f"fail prod list {er}")
+
     return [categorid, list_product]
 
 
@@ -172,6 +176,11 @@ def adminka():
             abort(404, message=f"Product {ex} not found")
     if form_categories.validate_on_submit():
         try:
+            for prod in form_categories.products.data.split(', '):
+                try:
+                    int(prod)
+                except Exception as er:
+                    abort(404, message=f'error prod_list')
             categories = Categories(
                 name=form_categories.name.data,
                 products=form_categories.products.data
@@ -193,6 +202,21 @@ def img():
     if form.validate_on_submit():
         open(form.FILE.data)
     return render_template('img.html', form=form, title='img', inform=inform)
+
+
+@app.route('/buy/<int:user_id>/<int:product_id>/delete', methods=['GET', 'POST'])
+@login_required
+def del_prod(user_id, product_id):
+    global inform
+    abort_if_user_not_found(user_id)
+    abort_if_products_not_found(product_id)
+    user = session.query(User).get(user_id)
+    li = user.basket.split('|')
+    if str(product_id) in li:
+        li.remove(str(product_id))
+    user.basket = '|'.join(li)
+    session.commit()
+    return redirect(f'/profile/{user_id}')
 
 
 @app.route('/buy/<int:user_id>/<int:product_id>', methods=['GET', 'POST'])
@@ -322,8 +346,11 @@ def catalog_v(id):
 @login_required
 def buy_product(id_catalog, id_product):
     user = session.query(User).get(current_user.id)
-    user.basket += '|' + str(id_product)
-    session.commit()
+    if str(id_product) in user.basket.split('|'):
+        pass
+    else:
+        user.basket += '|' + str(id_product)
+        session.commit()
     return redirect(f"/catalog/{id_catalog}")
 
 # @app.route('/add_job/<int:id>', methods=['GET', 'POST'])

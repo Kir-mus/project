@@ -42,12 +42,12 @@
       <div class="modal-body">
         {% for item in lists_bascket %}
     <form class="prof" action="" method="post">
-        <footer>{{item}}</footer>
+        <footer>id: {{item}}__________________<a href="/buy/{{current_user.id}}/{{item}}/delete">delete</a></footer>
         <img width="100px" height="100px" src={{lists_bascket[item][1]}}>
         <h4>{{lists_bascket[item][0]}}</h4>
-        <h6>{{lists_bascket[item][2]}}</h6>
-        <footer>{{lists_bascket[item][3]}}</footer>
-        <footer>{{lists_bascket[item][4]}}</footer>
+        <h6>info: {{lists_bascket[item][2]}}</h6>
+        <footer>coin: {{lists_bascket[item][3]}}</footer>
+        <footer>count: {{lists_bascket[item][4]}}</footer>
         <a href="/buy/{{current_user.id}}/{{item}}">Buy</a>
     </form>
     <br> <br> <br> <br>
