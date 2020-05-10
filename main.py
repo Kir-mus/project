@@ -117,7 +117,7 @@ class ProductForm(FlaskForm):
 
 class CategoriesForm(FlaskForm):
     name = StringField('name', validators=[DataRequired()])
-    products = StringField('products_list', validators=[DataRequired()])
+    products = StringField('products_list (пр. заполнения "1, 2, 3, 4")', validators=[DataRequired()])
     submit = SubmitField('Add categories')
 
 
@@ -130,11 +130,45 @@ class TrainerForm(FlaskForm):
     submit = SubmitField('Add trainer')
 
 
+class RedprofnameForm(FlaskForm):
+    name = StringField('name', validators=[DataRequired()])
+    submit = SubmitField('apply')
+
+
+class RedprofloginForm(FlaskForm):
+    login = StringField('login', validators=[DataRequired()])
+    submit = SubmitField('apply')
+
+
+class RedprofsurnameForm(FlaskForm):
+    surname = StringField('surname', validators=[DataRequired()])
+    submit = SubmitField('apply')
+
+
+class RedprofageForm(FlaskForm):
+    age = IntegerField('age', validators=[DataRequired()])
+    submit = SubmitField('apply')
+
+
+class RedprofemailForm(FlaskForm):
+    email = EmailField('email', validators=[DataRequired()])
+    submit = SubmitField('apply')
+
+
+class RedprofaddressForm(FlaskForm):
+    address = StringField('address', validators=[DataRequired()])
+    submit = SubmitField('apply')
+
+
 @app.route('/admin1234567', methods=['GET', 'POST'])
 def adminka():
     global inform
     categorid = pass_catal()[0]
     list_product = pass_catal()[1]
+    message = None
+    message_2 = None
+    message_4 = None
+    message_3 = None
     form = InfoForm()
     form_product = ProductForm()
     form_trainer = TrainerForm()
@@ -151,27 +185,34 @@ def adminka():
             abort(404, message=f"Product {er} not found")
     if form_product.validate_on_submit():
         try:
-            product = Product(
-                name=form_product.name.data,
-                coin=form_product.coin.data,
-                count=form_product.count.data,
-                info=form_product.info.data
-            )
-            session.add(product)
-            session.commit()
+            if session.query(Product).filter(Product.name == form_product.name.data).first():
+                message_2 = f'такой Product уже есть'
+            else:
+                product = Product(
+                    name=form_product.name.data,
+                    coin=form_product.coin.data,
+                    count=form_product.count.data,
+                    info=form_product.info.data
+                )
+                session.add(product)
+                session.commit()
         except Exception as ex:
             abort(404, message=f"Product {ex} not found")
+
     if form_trainer.validate_on_submit():
         try:
-            trainer = Trainer(
-                surname=form_trainer.surname.data,
-                name=form_trainer.name.data,
-                age=form_trainer.age.data,
-                email=form_trainer.email.data,
-                telefon=form_trainer.telefon.data
-            )
-            session.add(trainer)
-            session.commit()
+            if session.query(Trainer).filter(Trainer.email == form_trainer.email.data).first():
+                message_3 = f'такой email уже есть'
+            else:
+                trainer = Trainer(
+                    surname=form_trainer.surname.data,
+                    name=form_trainer.name.data,
+                    age=form_trainer.age.data,
+                    email=form_trainer.email.data,
+                    telefon=form_trainer.telefon.data
+                )
+                session.add(trainer)
+                session.commit()
         except Exception as ex:
             abort(404, message=f"Product {ex} not found")
     if form_categories.validate_on_submit():
@@ -181,16 +222,19 @@ def adminka():
                     int(prod)
                 except Exception as er:
                     abort(404, message=f'error prod_list')
-            categories = Categories(
-                name=form_categories.name.data,
-                products=form_categories.products.data
-            )
-            session.add(categories)
-            session.commit()
+            if session.query(Categories).filter(Categories.name == form_categories.name.data).first():
+                message_4 = f'такая Categories уже есть'
+            else:
+                categories = Categories(
+                    name=form_categories.name.data,
+                    products=form_categories.products.data
+                )
+                session.add(categories)
+                session.commit()
         except Exception as ex:
             abort(404, message=f"categories {ex} not found")
-    return render_template('adminka.html', title='adminka', form=form, form_product=form_product, message=None,
-                           message_2=None, message_3=None, message_4=None, form_trainer=form_trainer,
+    return render_template('adminka.html', title='adminka', form=form, form_product=form_product, message=message,
+                           message_2=message_2, message_3=message_3, message_4=message_4, form_trainer=form_trainer,
                            form_categories=form_categories, inform=inform, categorid=categorid,
                            list_product=list_product)
 
@@ -242,13 +286,64 @@ def buy(user_id, product_id):
 @login_required
 def prof(id):
     global inform
+    redprofnameform = RedprofnameForm()
+    redprofloginform = RedprofloginForm()
+    redprofsurnameform = RedprofsurnameForm()
+    redprofageform = RedprofageForm()
+    redprofemailform = RedprofemailForm()
+    redprofaddressform = RedprofaddressForm()
     abort_if_user_not_found(id)
+    user = session.query(User).get(id)
+    message = None
+    if redprofnameform.validate_on_submit():
+        try:
+            user.name = redprofnameform.name.data
+            session.commit()
+        except Exception as er:
+            abort(404, message=f"User {er} error redprof")
+
+    if redprofloginform.validate_on_submit():
+        try:
+            if session.query(User).filter(User.login == redprofloginform.login.data).first():
+                message = f'такой login уже есть'
+            else:
+                user.login = redprofloginform.login.data
+                session.commit()
+        except Exception as er:
+            abort(404, message=f"User {er} error redprof")
+
+    if redprofsurnameform.validate_on_submit():
+        try:
+            user.surname = redprofsurnameform.surname.data
+            session.commit()
+        except Exception as er:
+            abort(404, message=f"User {er} error redprof")
+    if redprofageform.validate_on_submit():
+        try:
+            user.age = redprofageform.age.data
+            session.commit()
+        except Exception as er:
+            abort(404, message=f"User {er} error redprof")
+    if redprofemailform.validate_on_submit():
+        try:
+            if session.query(User).filter(User.email == redprofemailform.email.data).first():
+                message = f'такой email уже есть'
+            else:
+                user.email = redprofemailform.email.data
+                session.commit()
+        except Exception as er:
+            abort(404, message=f"User {er} error redprof")
+    if redprofaddressform.validate_on_submit():
+        try:
+            user.address = redprofaddressform.address.data
+            session.commit()
+        except Exception as er:
+            abort(404, message=f"User {er} error redprof")
+
     categorid = pass_catal()[0]
     list_product = pass_catal()[1]
     id_treners = pass_treners()[0]
     id_li_client = pass_treners()[1]
-
-    user = session.query(User).get(id)
     stor = {}
     for stories in session.query(Stories).filter(Stories.user_id == id):
         stor[stories.id] = [session.query(User).get(stories.user_id), session.query(Product).get(stories.product_id),
@@ -260,7 +355,10 @@ def prof(id):
             lists_bascket[product.id] = [product.name, product.product_img, product.info, product.coin, product.count]
     return render_template('profile.html', categorid=categorid, lists_bascket=lists_bascket, stor=stor,
                            title='profile', user=user, inform=inform, list_product=list_product,
-                           id_treners=id_treners, id_li_client=id_li_client)
+                           id_treners=id_treners, id_li_client=id_li_client, redprofnameform=redprofnameform,
+                           redprofloginform=redprofloginform, redprofsurnameform=redprofsurnameform,
+                           redprofageform=redprofageform, redprofemailform=redprofemailform,
+                           redprofaddressform=redprofaddressform, message=message)
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -276,7 +374,11 @@ def reqister():
         if session.query(User).filter(User.email == form.email.data).first():
             return render_template('register.html', title='Регистрация',
                                    form=form,
-                                   message="Такой пользователь уже есть")
+                                   message="Такая почта уже есть")
+        if session.query(User).filter(User.login == form.login.data).first():
+            return render_template('register.html', title='Регистрация',
+                                   form=form,
+                                   message="Такой login уже есть")
         user = User(
             email=form.email.data,
             surname=form.surname.data,
@@ -290,8 +392,6 @@ def reqister():
         session.commit()
         return redirect('/login')
     return render_template('register.html', title='Регистрация', form=form, message=None, inform=inform)
-
-
 
 
 @login_manager.user_loader
@@ -311,9 +411,10 @@ def login():
         if user and user.check_password(form.password.data):
             login_user(user, remember=form.remember_me.data)
             return redirect(f"/profile/{user.id}")
-        return render_template('login.html',
-                               message="Неправильный логин или пароль",
-                               form=form)
+        else:
+            return render_template('login.html',
+                                   message="Неправильный логин или пароль",
+                                   form=form, inform=inform)
     return render_template('login.html', title='Авторизация', form=form, message=None, inform=inform)
 
 

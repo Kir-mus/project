@@ -2,12 +2,126 @@
 
 {% block content %}
     {% set sal = user.my_img %}
+
     <div class="row">
         <div class='col-md-2'>
         </div>
         <div class='col-md-10'>
+            <button class="btn btn-info" data-toggle="modal" data-target="#Modal_redprof">Редактировать</button>{% if message != None %}<div class="alert alert-danger" role="alert">{{ message }}</div>{% endif %}
+            <div id="Modal_redprof" class="modal fade" tabindex="-1">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">х</button>
+        <h4 class="modal-title">Редактирование</h4>
+      </div>
+      <div class="modal-body">
+
+          <form class="collapse navbar-collapse " action="" method="post">
+        {{ redprofloginform.hidden_tag() }}
+        <nav class="navbar navbar-default" role="navigation">
+        <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+        <li>
+            {{ redprofloginform.login.label }}<br>
+            {{ redprofloginform.login(class="form-control") }}   <br>
+            </li>
+
+        </ul></div>
+
+        <p>{{ redprofloginform.submit(type="submit", class="btn btn-primary") }}</p>
+        </nav>
+    </form>
+          <form class="collapse navbar-collapse " action="" method="post">
+        {{ redprofnameform.hidden_tag() }}
+        <nav class="navbar navbar-default" role="navigation">
+        <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+        <li>
+            {{ redprofnameform.name.label }}<br>
+            {{ redprofnameform.name(class="form-control") }}   <br>
+            </li>
+
+        </ul></div>
+
+        <p>{{ redprofnameform.submit(type="submit", class="btn btn-primary") }}</p>
+        </nav>
+    </form>
+          <form class="collapse navbar-collapse " action="" method="post">
+        {{ redprofsurnameform.hidden_tag() }}
+        <nav class="navbar navbar-default" role="navigation">
+        <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+        <li>
+            {{ redprofsurnameform.surname.label }}<br>
+            {{ redprofsurnameform.surname(class="form-control") }}   <br>
+            </li>
+
+        </ul></div>
+
+        <p>{{ redprofsurnameform.submit(type="submit", class="btn btn-primary") }}</p>
+        </nav>
+    </form>
+          <form class="collapse navbar-collapse " action="" method="post">
+        {{ redprofageform.hidden_tag() }}
+        <nav class="navbar navbar-default" role="navigation">
+        <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+        <li>
+            {{ redprofageform.age.label }}<br>
+            {{ redprofageform.age(class="form-control") }}   <br>
+            </li>
+
+        </ul></div>
+
+        <p>{{ redprofageform.submit(type="submit", class="btn btn-primary") }}</p>
+        </nav>
+    </form>
+          <form class="collapse navbar-collapse " action="" method="post">
+        {{ redprofemailform.hidden_tag() }}
+        <nav class="navbar navbar-default" role="navigation">
+        <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+        <li>
+            {{ redprofemailform.email.label }}<br>
+            {{ redprofemailform.email(class="form-control") }}   <br>
+            </li>
+
+        </ul></div>
+
+        <p>{{ redprofemailform.submit(type="submit", class="btn btn-primary") }}</p>
+        </nav>
+    </form>
+          <form class="collapse navbar-collapse " action="" method="post">
+        {{ redprofaddressform.hidden_tag() }}
+        <nav class="navbar navbar-default" role="navigation">
+        <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+        <li>
+            {{ redprofaddressform.address.label }}<br>
+            {{ redprofaddressform.address(class="form-control") }}   <br>
+            </li>
+
+        </ul></div>
+
+        <p>{{ redprofaddressform.address(type="submit", class="btn btn-primary") }}</p>
+        </nav>
+    </form>
+
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-danger" data-dismiss="modal">Закрыть</button>
+      </div>
+    </div>
+  </div>
+</div>
+
     <form class="prof">
-        <nav><img class="img-circle" width="100px" height="100px" src={{sal}}><h1>PROFILE</h1></nav>
+        <img class="img-circle" width="100px" height="100px" src={{sal}}><h1>PROFILE</h1>
+
+
+
+
     <div class="row">
         <div class='col-md-4'>
             <label>login</label>
