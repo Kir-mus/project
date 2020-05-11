@@ -69,10 +69,9 @@ def pass_catal():
             try:
                 id_product_list.append(int(prod))
                 list_product[str(cate.id)] = id_product_list
-                id_product_list = []
             except Exception as er:
                 abort(404, message=f"fail prod list {er}")
-
+        id_product_list = []
     return [categorid, list_product]
 
 
@@ -110,7 +109,7 @@ class LoginForm(FlaskForm):
 
 
 class ProductForm(FlaskForm):
-    name = StringField('name', validators=[DataRequired()])
+    nameprod = StringField('name', validators=[DataRequired()])
     coin = IntegerField('coin', validators=[DataRequired()])
     count = IntegerField('count', validators=[DataRequired()])
     info = StringField('info', validators=[DataRequired()])
@@ -118,14 +117,14 @@ class ProductForm(FlaskForm):
 
 
 class CategoriesForm(FlaskForm):
-    name = StringField('name', validators=[DataRequired()])
+    namecat = StringField('name', validators=[DataRequired()])
     products = StringField('products_list (пр. заполнения "1, 2, 3, 4")', validators=[DataRequired()])
     submit = SubmitField('Add categories')
 
 
 class TrainerForm(FlaskForm):
     surname = StringField('surname', validators=[DataRequired()])
-    name = StringField('name', validators=[DataRequired()])
+    nametren = StringField('name', validators=[DataRequired()])
     age = IntegerField('age', validators=[DataRequired()])
     email = EmailField('email', validators=[DataRequired()])
     telefon = StringField('Телефон', validators=[DataRequired()])
@@ -173,7 +172,7 @@ class RedtrenForm(FlaskForm):
 
 
 class DeltrenForm(FlaskForm):
-    id = StringField('id тренера', validators=[DataRequired()])
+    id_trendelet = StringField('id тренера', validators=[DataRequired()])
     submitt = SubmitField('delete')
 
 
@@ -195,7 +194,7 @@ class RedcateForm(FlaskForm):
     idcate = IntegerField('id (Категории)', validators=[DataRequired()])
     namecate = StringField('name', validators=[DataRequired()])
     productcate = StringField('продукт лист(пр. заполнения "1, 2, 3, 4")', validators=[DataRequired()])
-    submit = SubmitField('apply')
+    submitred = SubmitField('apply')
 
 
 class DelcateForm(FlaskForm):
@@ -208,6 +207,7 @@ def adminka():
     global inform
     categorid = pass_catal()[0]
     list_product = pass_catal()[1]
+    id_treners = pass_treners()[0]
     message = None
     message_2 = None
     message_4 = None
@@ -240,11 +240,11 @@ def adminka():
             abort(404, message=f"Product {er} not found")
     if form_product.validate_on_submit():
         try:
-            if session.query(Product).filter(Product.name == form_product.name.data).first():
+            if session.query(Product).filter(Product.name == form_product.nameprod.data).first():
                 message_2 = f'такой Product уже есть'
             else:
                 product = Product(
-                    name=form_product.name.data,
+                    name=form_product.nameprod.data,
                     coin=form_product.coin.data,
                     count=form_product.count.data,
                     info=form_product.info.data
@@ -261,7 +261,7 @@ def adminka():
             else:
                 trainer = Trainer(
                     surname=form_trainer.surname.data,
-                    name=form_trainer.name.data,
+                    name=form_trainer.nametren.data,
                     age=form_trainer.age.data,
                     email=form_trainer.email.data,
                     telefon=form_trainer.telefon.data
@@ -277,11 +277,11 @@ def adminka():
                     int(prod)
                 except Exception as er:
                     abort(404, message=f'error prod_list')
-            if session.query(Categories).filter(Categories.name == form_categories.name.data).first():
+            if session.query(Categories).filter(Categories.name == form_categories.namecat.data).first():
                 message_4 = f'такая Categories уже есть'
             else:
                 categories = Categories(
-                    name=form_categories.name.data,
+                    name=form_categories.namecat.data,
                     products=form_categories.products.data
                 )
                 session.add(categories)
@@ -306,15 +306,12 @@ def adminka():
         except Exception as ex:
             abort(404, message=f"error {ex} redtren")
     if deltren_form.validate_on_submit():
-        try:
-            trainersdel = session.query(Trainer).get(int(redtren_form.id.data))
+            trainersdel = session.query(Trainer).get(int(deltren_form.id_trendelet.data))
             if not trainersdel:
                 message_del = f'Такого id нет'
             else:
                 session.delete(trainersdel)
                 session.commit()
-        except Exception as ex:
-            abort(404, message=f'error {ex} deltren')
     if redprod_form.validate_on_submit():
         try:
             prodct = session.query(Product).get(int(redprod_form.idd.data))
@@ -352,7 +349,7 @@ def adminka():
             else:
                 if session.query(Categories).filter(Categories.name == redcate_form.namecate.data).first() and \
                         cate.name != redcate_form.namecate.data:
-                    message_cate = f'Такогй Product уже есть'
+                    message_cate = f'Такая категория уже есть'
                 else:
 
                             cate.name = redcate_form.namecate.data
@@ -378,7 +375,7 @@ def adminka():
                            message_del=message_del, deltren_form=deltren_form, delprod_form=delprod_form,
                            redprod_form=redprod_form, message_prod=message_prod, message_prodel=message_prodel,
                            message_cate=message_cate, message_delcate=message_delcate, redcate_form=redcate_form,
-                           delcate_form=delcate_form)
+                           delcate_form=delcate_form, id_treners=id_treners)
 
 
 @app.route('/img', methods=['GET', 'POST'])
@@ -434,8 +431,8 @@ def prof(id):
     redprofageform = RedprofageForm()
     redprofemailform = RedprofemailForm()
     redprofaddressform = RedprofaddressForm()
-    abort_if_user_not_found(id)
-    user = session.query(User).get(id)
+    abort_if_user_not_found(current_user.id)
+    user = session.query(User).get(current_user.id)
     message = None
     if redprofnameform.validate_on_submit():
         try:
@@ -492,6 +489,7 @@ def prof(id):
                             stories.modified_date]
     lists_bascket = {}
     list_bascket = user.basket.split('|')
+    print(list_bascket)
     for item in list_bascket:
         for product in session.query(Product).filter(Product.id == int(item)):
             lists_bascket[product.id] = [product.name, product.product_img, product.info, product.coin, product.count]
@@ -577,9 +575,11 @@ def catalog_v(id):
     id_li_client = pass_treners()[1]
     categories = session.query(Categories).get(int(id))
     product_data = {}
+    print(list_product)
     for item in list_product[str(id)]:
         for product in session.query(Product).filter(Product.id == int(item)):
             product_data[product.id] = [product.name, product.product_img, product.info, product.coin, product.count]
+    print(product_data)
     return render_template('catalog_v.html', title=categories.name, categories=categories,
                            product_data=product_data, categorid=categorid,
                            inform=inform, id_treners=id_treners, id_li_client=id_li_client)
@@ -589,6 +589,7 @@ def catalog_v(id):
 @login_required
 def buy_product(id_catalog, id_product):
     user = session.query(User).get(current_user.id)
+    print('user', user.id)
     if str(id_product) in user.basket.split('|'):
         print('s', id_product, user.basket.split('|'), current_user.id)
         pass
