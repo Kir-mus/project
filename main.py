@@ -428,6 +428,7 @@ def buy(user_id, product_id):
 @login_required
 def prof(id):
     global inform
+
     tokin_chek_form = Tokin_chek_Form()
     redprofnameform = RedprofnameForm()
     redprofloginform = RedprofloginForm()
@@ -439,10 +440,8 @@ def prof(id):
     user = session.query(User).get(current_user.id)
     message = None
     if tokin_chek_form.validate_on_submit():
-
             if tokin_chek_form.tok.data == token_adminki:
-                user = session.query(Trainer).get(int(current_user.id))
-                user.admin_chek = 'True'
+                user.admin_chek = True
                 session.commit()
             else:
                 pass

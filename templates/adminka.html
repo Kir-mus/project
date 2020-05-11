@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
+{% if current_user.is_authenticated %}
+{% if current_user.admin_chek %}
     <div class="row">
         <div class="col-md-4">
     <form class="collapse navbar-collapse du_login" action="" method="post">
@@ -271,4 +273,6 @@
     </form>
         </div>
         </div>
+{% else %}not admin chek{% endif %}
+{% else %}not User log{% endif %}
 {% endblock %}
