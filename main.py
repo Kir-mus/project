@@ -38,6 +38,8 @@ def abort_if_user_not_found(user_id):
         abort(404, message=f"User {user_id} not found")
 
 
+
+
 def abort_if_products_not_found(products_id):
     products = session.query(Product).get(products_id)
     if not products:
@@ -160,6 +162,47 @@ class RedprofaddressForm(FlaskForm):
     submit = SubmitField('apply')
 
 
+class RedtrenForm(FlaskForm):
+    id = IntegerField('id (Тренера)', validators=[DataRequired()])
+    nam = StringField('name', validators=[DataRequired()])
+    surnam = StringField('surname', validators=[DataRequired()])
+    emai = EmailField('email', validators=[DataRequired()])
+    ag = IntegerField('age', validators=[DataRequired()])
+    telefo = StringField('telefon', validators=[DataRequired()])
+    submi = SubmitField('apply')
+
+
+class DeltrenForm(FlaskForm):
+    id = StringField('id тренера', validators=[DataRequired()])
+    submitt = SubmitField('delete')
+
+
+class RedprodForm(FlaskForm):
+    idd = IntegerField('id (Продукта)', validators=[DataRequired()])
+    namep = StringField('name', validators=[DataRequired()])
+    infoo = StringField('info', validators=[DataRequired()])
+    coins = IntegerField('coin', validators=[DataRequired()])
+    counts = IntegerField('count', validators=[DataRequired()])
+    submip = SubmitField('apply')
+
+
+class DelprodForm(FlaskForm):
+    idt = StringField('id Продукта', validators=[DataRequired()])
+    submidd = SubmitField('delete')
+
+
+class RedcateForm(FlaskForm):
+    idcate = IntegerField('id (Категории)', validators=[DataRequired()])
+    namecate = StringField('name', validators=[DataRequired()])
+    productcate = StringField('продукт лист(пр. заполнения "1, 2, 3, 4")', validators=[DataRequired()])
+    submit = SubmitField('apply')
+
+
+class DelcateForm(FlaskForm):
+    iddelcate = StringField('id Категории', validators=[DataRequired()])
+    submidelcate = SubmitField('delete')
+
+
 @app.route('/admin1234567', methods=['GET', 'POST'])
 def adminka():
     global inform
@@ -169,10 +212,22 @@ def adminka():
     message_2 = None
     message_4 = None
     message_3 = None
+    message_dop = None
+    message_del = None
+    message_prod = None
+    message_prodel = None
+    message_cate = None
+    message_delcate = None
+    redcate_form = RedcateForm()
+    delcate_form = DelcateForm()
+    delprod_form = DelprodForm()
+    redprod_form = RedprodForm()
     form = InfoForm()
     form_product = ProductForm()
     form_trainer = TrainerForm()
     form_categories = CategoriesForm()
+    redtren_form = RedtrenForm()
+    deltren_form = DeltrenForm()
     if form.validate_on_submit():
         try:
             inform.name = form.name.data
@@ -233,10 +288,97 @@ def adminka():
                 session.commit()
         except Exception as ex:
             abort(404, message=f"categories {ex} not found")
+    if redtren_form.validate_on_submit():
+        try:
+            trainers = session.query(Trainer).get(int(redtren_form.id.data))
+            if not trainers:
+                message_dop = f'Такого id нет'
+            elif session.query(Trainer).filter(Trainer.email == redtren_form.emai.data).first() \
+                    and trainers.email != redtren_form.emai.data:
+                message_dop = f'такой email уже есть'
+            else:
+                trainers.surname = redtren_form.surnam.data
+                trainers.name = redtren_form.nam.data
+                trainers.age = redtren_form.ag.data
+                trainers.telefon = redtren_form.telefo.data
+                trainers.email = redtren_form.emai.data
+                session.commit()
+        except Exception as ex:
+            abort(404, message=f"error {ex} redtren")
+    if deltren_form.validate_on_submit():
+        try:
+            trainersdel = session.query(Trainer).get(int(redtren_form.id.data))
+            if not trainersdel:
+                message_del = f'Такого id нет'
+            else:
+                session.delete(trainersdel)
+                session.commit()
+        except Exception as ex:
+            abort(404, message=f'error {ex} deltren')
+    if redprod_form.validate_on_submit():
+        try:
+            prodct = session.query(Product).get(int(redprod_form.idd.data))
+            if not prodct:
+                message_prod = f'Такого id нет'
+            else:
+                if session.query(Product).filter(Product.name == redprod_form.namep.data).first() and \
+                        prodct.name != redprod_form.namep.data:
+                    message_prod = f'Такогй Product уже есть'
+                else:
+                    prodct.name = redprod_form.namep.data
+                    prodct.info = redprod_form.infoo.data
+                    prodct.count = redprod_form.counts.data
+                    prodct.coin = redprod_form.coins.data
+                    session.commit()
+        except Exception as ex:
+            abort(404, message=f'error {ex} prodel')
+    if delprod_form.validate_on_submit():
+        try:
+            prodd = session.query(Product).get(int(delprod_form.idt.data))
+            if not prodd:
+                message_prodel = f'Такого id нет'
+            else:
+                session.delete(prodd)
+                session.commit()
+        except Exception as ex:
+            abort(404, message=f'error {ex} prodel')
+
+    if redcate_form.validate_on_submit():
+        print('kkkk')
+        try:
+            cate = session.query(Categories).get(int(redcate_form.idcate.data))
+            if not cate:
+                message_cate = f'Такого id нет'
+            else:
+                if session.query(Categories).filter(Categories.name == redcate_form.namecate.data).first() and \
+                        cate.name != redcate_form.namecate.data:
+                    message_cate = f'Такогй Product уже есть'
+                else:
+
+                            cate.name = redcate_form.namecate.data
+                            cate.products = redcate_form.productcate.data
+                            session.commit()
+
+        except Exception as ex:
+            abort(404, message=f'error {ex} prodel')
+    if delcate_form.validate_on_submit():
+        try:
+            dcate = session.query(Categories).get(int(delcate_form.iddelcate.data))
+            if not dcate:
+                message_delcate = f'Такого id нет'
+            else:
+                session.delete(dcate)
+                session.commit()
+        except Exception as ex:
+            abort(404, message=f'error {ex} prodel')
     return render_template('adminka.html', title='adminka', form=form, form_product=form_product, message=message,
                            message_2=message_2, message_3=message_3, message_4=message_4, form_trainer=form_trainer,
                            form_categories=form_categories, inform=inform, categorid=categorid,
-                           list_product=list_product)
+                           list_product=list_product, message_dop=message_dop, redtren_form=redtren_form,
+                           message_del=message_del, deltren_form=deltren_form, delprod_form=delprod_form,
+                           redprod_form=redprod_form, message_prod=message_prod, message_prodel=message_prodel,
+                           message_cate=message_cate, message_delcate=message_delcate, redcate_form=redcate_form,
+                           delcate_form=delcate_form)
 
 
 @app.route('/img', methods=['GET', 'POST'])
@@ -369,16 +511,16 @@ def reqister():
         if form.password_1.data != form.password_2.data:
             return render_template('register.html', title='Регистрация',
                                    form=form,
-                                   message="Пароли не совпадают")
+                                   message="Пароли не совпадают", inform=inform)
         session = db_session.create_session()
         if session.query(User).filter(User.email == form.email.data).first():
             return render_template('register.html', title='Регистрация',
                                    form=form,
-                                   message="Такая почта уже есть")
+                                   message="Такая почта уже есть", inform=inform)
         if session.query(User).filter(User.login == form.login.data).first():
             return render_template('register.html', title='Регистрация',
                                    form=form,
-                                   message="Такой login уже есть")
+                                   message="Такой login уже есть", inform=inform)
         user = User(
             email=form.email.data,
             surname=form.surname.data,
@@ -443,11 +585,12 @@ def catalog_v(id):
                            inform=inform, id_treners=id_treners, id_li_client=id_li_client)
 
 
-@app.route('/catalog/catalog/<int:id_catalog>/in_bascket/<int:id_product>')
+@app.route('/catalog/<int:id_catalog>/in_bascket/<int:id_product>')
 @login_required
 def buy_product(id_catalog, id_product):
     user = session.query(User).get(current_user.id)
     if str(id_product) in user.basket.split('|'):
+        print('s', id_product, user.basket.split('|'), current_user.id)
         pass
     else:
         user.basket += '|' + str(id_product)

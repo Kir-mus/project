@@ -29,6 +29,68 @@
         {% if message != None %}<div class="alert alert-danger" role="alert">{{ message }}</div>{% endif %}
         </nav>
     </form>
+            <br><br>
+            <form class="collapse navbar-collapse du_login" action="" method="post">
+            <h2>Добавление категории</h2>
+        {{ form_categories.hidden_tag() }}
+                <nav class="navbar navbar-default" role="navigation">
+        <div class="collapse navbar-collapse" >
+        <ul class="nav navbar-nav">
+        <li>
+            {{ form_categories.name.label }}<br>
+            {{ form_categories.name(class="form-control") }}   <br>
+            </li>
+
+            <li>{{ form_categories.products.label }}
+                {{ form_categories.products(class="form-control") }}  <br>
+            </li>
+        </ul></div>
+            <br>
+        <p>{{ form_categories.submit(type="submit", class="btn btn-primary") }}</p>
+        {% if message_4 != None %}<div class="alert alert-danger" role="alert">{{ message_4 }}</div>{% endif %}
+                </nav>
+    </form>
+    <form class="collapse navbar-collapse du_login" action="" method="post">
+            <h2>Редактирование категории</h2>
+        {{ redcate_form.hidden_tag() }}
+                <nav class="navbar navbar-default" role="navigation">
+        <div class="collapse navbar-collapse" >
+        <ul class="nav navbar-nav">
+        <li>
+            {{ redcate_form.idcate.label }}<br>
+            {{ redcate_form.idcate(class="form-control") }}   <br>
+            </li>
+            <li>
+            {{ redcate_form.namecate.label }}<br>
+            {{ redcate_form.namecate(class="form-control") }}   <br>
+            </li>
+
+            <li>{{ redcate_form.productcate.label }}
+                {{ redcate_form.productcate(class="form-control") }}  <br>
+            </li>
+        </ul></div>
+            <br>
+        <p>{{ redcate_form.submit(type="submit", class="btn btn-primary") }}</p>
+        {% if message_cate != None %}<div class="alert alert-danger" role="alert">{{ message_cate }}</div>{% endif %}
+                </nav>
+    </form>
+    </form>
+        <form class="collapse navbar-collapse du_login" action="" method="post">
+            <h2>Удаление категории</h2>
+        {{ delcate_form.hidden_tag() }}
+                <nav class="navbar navbar-default" role="navigation">
+        <div class="collapse navbar-collapse" >
+        <ul class="nav navbar-nav">
+            <li>
+            {{ delcate_form.iddelcate.label }}<br>
+            {{ delcate_form.iddelcate(class="form-control") }}   <br>
+            </li>
+        </ul></div>
+            <br>
+        <p>{{ delcate_form.submidelcate(type="submit", class="btn btn-danger") }}</p>
+        {% if message_delcate != None %}<div class="alert alert-danger" role="alert">{{ message_delcate }}</div>{% endif %}
+                </nav>
+    </form>
         </div>
         <div class="col-md-4">
             <form class="collapse navbar-collapse du_login" action="" method="post">
@@ -58,24 +120,49 @@
                 </nav>
                 <!--categories-->
     </form>
-            <form class="collapse navbar-collapse du_login" action="" method="post">
-            <h2>Добавление категории</h2>
-        {{ form_categories.hidden_tag() }}
+<form class="collapse navbar-collapse du_login" action="" method="post">
+            <h2>Редактирование продукта</h2>
+        {{ redprod_form.hidden_tag() }}
                 <nav class="navbar navbar-default" role="navigation">
         <div class="collapse navbar-collapse" >
         <ul class="nav navbar-nav">
-        <li>
-            {{ form_categories.name.label }}<br>
-            {{ form_categories.name(class="form-control") }}   <br>
+            <li>
+            {{ redprod_form.idd.label }}<br>
+            {{ redprod_form.idd(class="form-control") }}   <br>
             </li>
 
-            <li>{{ form_categories.products.label }}
-                {{ form_categories.products(class="form-control") }}  <br>
+            <li>{{ redprod_form.namep.label }}
+                {{ redprod_form.namep(class="form-control") }}  <br>
+            </li>
+            <li>{{ redprod_form.infoo.label }}
+                {{ redprod_form.infoo(class="form-control") }}  <br>
+            </li>
+            <li>{{ redprod_form.coins.label }}
+                {{ redprod_form.coins(class="form-control") }}  <br>
+            </li>
+            <li>{{ redprod_form.counts.label }}
+                {{ redprod_form.counts(class="form-control") }}  <br>
             </li>
         </ul></div>
             <br>
-        <p>{{ form_categories.submit(type="submit", class="btn btn-primary") }}</p>
-        {% if message_4 != None %}<div class="alert alert-danger" role="alert">{{ message_4 }}</div>{% endif %}
+        <p>{{ redprod_form.submip(type="submit", class="btn btn-primary") }}</p>
+        {% if message_prod != None %}<div class="alert alert-danger" role="alert">{{ message_prod }}</div>{% endif %}
+                </nav>
+    </form>
+        <form class="collapse navbar-collapse du_login" action="" method="post">
+            <h2>Удаление продукта</h2>
+        {{ delprod_form.hidden_tag() }}
+                <nav class="navbar navbar-default" role="navigation">
+        <div class="collapse navbar-collapse" >
+        <ul class="nav navbar-nav">
+            <li>
+            {{ delprod_form.idt.label }}<br>
+            {{ delprod_form.idt(class="form-control") }}   <br>
+            </li>
+        </ul></div>
+            <br>
+        <p>{{ delprod_form.submidd(type="submit", class="btn btn-danger") }}</p>
+        {% if message_prodel != None %}<div class="alert alert-danger" role="alert">{{ message_prodel }}</div>{% endif %}
                 </nav>
     </form>
         </div>
@@ -108,6 +195,80 @@
         <p>{{ form_trainer.submit(type="submit", class="btn btn-primary") }}</p>
         {% if message_3 != None %}<div class="alert alert-danger" role="alert">{{ message_3 }}</div>{% endif %}
                 </nav>
+    </form>
+        <form class="collapse navbar-collapse du_login" action="" method="post">
+            <h2>Редактирование тренера</h2>
+        {{ redtren_form.hidden_tag() }}
+        <nav class="navbar navbar-default" role="navigation">
+        <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+        <li>
+            {{ redtren_form.id.label }}<br>
+            {{ redtren_form.id(class="form-control") }}   <br>
+            </li>
+
+        </ul></div>
+            <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+        <li>
+            {{ redtren_form.nam.label }}<br>
+            {{ redtren_form.nam(class="form-control") }}   <br>
+            </li>
+
+        </ul></div>
+            <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+        <li>
+            {{ redtren_form.surnam.label }}<br>
+            {{ redtren_form.surnam(class="form-control") }}   <br>
+            </li>
+
+        </ul></div>
+            <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+        <li>
+            {{ redtren_form.emai.label }}<br>
+            {{ redtren_form.emai(class="form-control") }}   <br>
+            </li>
+
+        </ul></div>
+            <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+        <li>
+            {{ redtren_form.ag.label }}<br>
+            {{ redtren_form.ag(class="form-control") }}   <br>
+            </li>
+
+        </ul></div>
+            <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+        <li>
+            {{ redtren_form.telefo.label }}<br>
+            {{ redtren_form.telefo(class="form-control") }}   <br>
+            </li>
+
+        </ul></div>
+
+        <p>{{ redtren_form.submi(type="submit", class="btn btn-primary") }}</p>
+        </nav>
+            {% if message_dop != None %}<div class="alert alert-danger" role="alert">{{ message_dop }}</div>{% endif %}
+    </form>
+    <form class="collapse navbar-collapse du_login" action="" method="post">
+            <h2>Удаление тренера</h2>
+        {{ deltren_form.hidden_tag() }}
+        <nav class="navbar navbar-default" role="navigation">
+        <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+        <li>
+            {{ deltren_form.id.label }}<br>
+            {{ deltren_form.id(class="form-control") }}   <br>
+            </li>
+
+        </ul></div>
+
+        <p>{{ deltren_form.submitt(type="submit", class="btn btn-danger") }}</p>
+        </nav>
+            {% if message_del != None %}<div class="alert alert-danger" role="alert">{{ message_del }}</div>{% endif %}
     </form>
         </div>
         </div>
