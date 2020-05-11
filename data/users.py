@@ -18,8 +18,7 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
         return check_password_hash(self.hashed_password, password)
 
     __tablename__ = 'users'
-    id = sqlalchemy.Column(sqlalchemy.Integer,
-                           primary_key=True, autoincrement=True)
+    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
     login = sqlalchemy.Column(sqlalchemy.String, nullable=False, unique=True)
     surname = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     name = sqlalchemy.Column(sqlalchemy.String, nullable=True)
@@ -30,4 +29,5 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     email = sqlalchemy.Column(sqlalchemy.String, unique=True, nullable=False)
     hashed_password = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     modified_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)
+    admin_chek = sqlalchemy.Column(sqlalchemy.Boolean, nullable=False, default=False)
     stories = orm.relation('Stories', back_populates='user')

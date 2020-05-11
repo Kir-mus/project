@@ -30,14 +30,13 @@ login_manager.init_app(app)
 api = Api(app)
 session = db_session.create_session()
 inform = session.query(Info).get(1)
+token_adminki = 'secret_token0000'
 
 
 def abort_if_user_not_found(user_id):
     user = session.query(User).get(user_id)
     if not user:
         abort(404, message=f"User {user_id} not found")
-
-
 
 
 def abort_if_products_not_found(products_id):
@@ -82,6 +81,11 @@ class InfoForm(FlaskForm):
     admin = StringField('admin', validators=[DataRequired()])
     derektor = StringField('derektor', validators=[DataRequired()])
     submit = SubmitField('применить')
+
+
+class Tokin_chek_Form(FlaskForm):
+    tok = StringField('Ввод токена', validators=[DataRequired()])
+    chek = SubmitField('применить')
 
 
 class fileForm(FlaskForm):
@@ -204,7 +208,7 @@ class DelcateForm(FlaskForm):
 
 @app.route('/admin1234567', methods=['GET', 'POST'])
 def adminka():
-    global inform
+    global inform, token_adminki
     categorid = pass_catal()[0]
     list_product = pass_catal()[1]
     id_treners = pass_treners()[0]
@@ -341,7 +345,6 @@ def adminka():
             abort(404, message=f'error {ex} prodel')
 
     if redcate_form.validate_on_submit():
-        print('kkkk')
         try:
             cate = session.query(Categories).get(int(redcate_form.idcate.data))
             if not cate:
@@ -425,6 +428,7 @@ def buy(user_id, product_id):
 @login_required
 def prof(id):
     global inform
+    tokin_chek_form = Tokin_chek_Form()
     redprofnameform = RedprofnameForm()
     redprofloginform = RedprofloginForm()
     redprofsurnameform = RedprofsurnameForm()
@@ -434,6 +438,14 @@ def prof(id):
     abort_if_user_not_found(current_user.id)
     user = session.query(User).get(current_user.id)
     message = None
+    if tokin_chek_form.validate_on_submit():
+
+            if tokin_chek_form.tok.data == token_adminki:
+                user = session.query(Trainer).get(int(current_user.id))
+                user.admin_chek = 'True'
+                session.commit()
+            else:
+                pass
     if redprofnameform.validate_on_submit():
         try:
             user.name = redprofnameform.name.data
@@ -498,7 +510,7 @@ def prof(id):
                            id_treners=id_treners, id_li_client=id_li_client, redprofnameform=redprofnameform,
                            redprofloginform=redprofloginform, redprofsurnameform=redprofsurnameform,
                            redprofageform=redprofageform, redprofemailform=redprofemailform,
-                           redprofaddressform=redprofaddressform, message=message)
+                           redprofaddressform=redprofaddressform, message=message, tokin_chek_form=tokin_chek_form)
 
 
 @app.route('/register', methods=['GET', 'POST'])

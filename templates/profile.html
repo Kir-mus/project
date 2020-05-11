@@ -201,6 +201,38 @@
 </div>
         </div>
     </div>
+            <button class="btn" data-toggle="modal" data-target="#Modal_admin">Активация токена</button>
+<div id="Modal_admin" class="modal fade" tabindex="-1">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">х</button>
+        <h4 class="modal-title">Активация токена</h4>
+      </div>
+      <div class="modal-body">
+
+    <form class="collapse navbar-collapse" action="" method="post">
+        {{ tokin_chek_form.hidden_tag() }}
+                <nav class="navbar navbar-default" role="navigation">
+        <div class="collapse navbar-collapse" >
+        <ul class="nav navbar-nav">
+        <li>
+            {{ tokin_chek_form.tok.label }}<br>
+            {{ tokin_chek_form.tok(class="form-control") }}   <br>
+            </li>
+        </ul></div>
+            <br>
+        <p>{{ tokin_chek_form.chek(type="submit", class="btn btn-primary") }}</p>
+                </nav>
+    </form>
+
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-danger" data-dismiss="modal">Закрыть</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!--histor-->
 <!-- jQuery -->
