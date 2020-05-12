@@ -1,24 +1,10 @@
 from flask_restful import reqparse, abort, Api, Resource
 from flask import Flask, jsonify
-import datetime
-import sqlalchemy
-from sqlalchemy import orm
-from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-from .db_session import SqlAlchemyBase
-from sqlalchemy_serializer import SerializerMixin
 from data import db_session
 from data.users import User
 
-parser = reqparse.RequestParser()
-parser.add_argument('login', required=True)
-parser.add_argument('surname', required=False)
-parser.add_argument('name', required=False)
-parser.add_argument('age', required=False, type=int)
-parser.add_argument('address', required=True)
-parser.add_argument('email', required=True)
-parser.add_argument('basket', required=False)
-parser.add_argument('my_img', required=False)
+API_TOKEN = 'secret_token0000'
 
 
 def set_password(password):
@@ -26,55 +12,27 @@ def set_password(password):
     return hashed_password
 
 
-def abort_if_news_not_found(user_id):
-    session = db_session.create_session()
-    user = session.query(User).get(user_id)
-    if not user:
-        abort(404, message=f"User {user_id} not found")
-    elif session.query(User).filter(User.email == user.email).first():
-        abort(404, message=f"User {user_id} act")
-    elif session.query(User).filter(User.login == user.login).first():
-        abort(404, message=f"User {user_id} not login")
-
-
 class UsersResource(Resource):
-    def get(self, user_id):
-        abort_if_news_not_found(user_id)
-        session = db_session.create_session()
-        user = session.query(User).get(user_id)
-        return jsonify({'user': user.to_dict(
-            only=('id', 'login', 'surname', 'name', 'age', 'address', 'email', 'hashed_password'))})
-
-    def delete(self, user_id):
-        abort_if_news_not_found(user_id)
-        session = db_session.create_session()
-        user = session.query(User).get(user_id)
-        session.delete(user)
-        session.commit()
-        return jsonify({'success': 'OK'})
+    def get(self, user_id, token):
+        if token == API_TOKEN:
+            session = db_session.create_session()
+            user = session.query(User).get(user_id)
+            if user:
+                return jsonify({'user': user.to_dict(
+                    only=('id', 'login', 'surname', 'name', 'age', 'address', 'email', 'admin_chek'))})
+            else:
+                return jsonify({'error': f'not fond user {user_id}'})
+        else:
+            return jsonify({'error': 'not token'})
 
 
 class UsersListResource(Resource):
-    def get(self):
-        session = db_session.create_session()
-        user = session.query(User).all()
-        return jsonify({'users': [item.to_dict(
-            only=('id', 'login', 'surname', 'name', 'age', 'address',
-                  'email', 'hashed_password')) for item in user]})
-
-    def post(self):
-        args = parser.parse_args()
-        session = db_session.create_session()
-        user = User(
-            id=args['id'],
-            login=args['login'],
-            surname=args['surname'],
-            name=args['name'],
-            age=args['age'],
-            address=args['address'],
-            email=args['email'],
-            hashed_password=set_password(args['hashed_password'])
-        )
-        session.add(user)
-        session.commit()
-        return jsonify({'success': 'OK'})
+    def get(self, token):
+        if token == API_TOKEN:
+            session = db_session.create_session()
+            user = session.query(User).all()
+            return jsonify({'users': [item.to_dict(
+                only=('id', 'login', 'surname', 'name', 'age', 'address',
+                      'email', 'admin_chek')) for item in user]})
+        else:
+            return jsonify({'error': 'not token'})

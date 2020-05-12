@@ -15,12 +15,10 @@ from data.INFORM import Info
 from data.products import Product
 from data.stories import Stories
 from data.trainers import Trainer
-from data.comments import Comment
-from data import users_resource
-from data import сategories_resource
-from data import products_resource
-from data import stories_resource
-from data import trainers_resource
+from project.data import users_resource
+from project.data import catalog_resource
+from project.data import stories_resource
+from project.data import trainers_resource
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -30,7 +28,15 @@ login_manager.init_app(app)
 api = Api(app)
 session = db_session.create_session()
 inform = session.query(Info).get(1)
-token_adminki = 'secret_token0000'
+TOKEN_ADMINKI = 'secret_token0000'
+api.add_resource(catalog_resource.CatalogsResource, '/api/v2/catalog/<int:catalog_id>')
+api.add_resource(catalog_resource.CatalogsListResource, '/api/v2/catalog')
+api.add_resource(users_resource.UsersResource, '/api/v2/user/<int:user_id>/<token>')
+api.add_resource(users_resource.UsersListResource, '/api/v2/user/<token>')
+api.add_resource(trainers_resource.TrainersResource, '/api/v2/trainer/<int:trainer_id>')
+api.add_resource(trainers_resource.TrainersListResource, '/api/v2/trainers')
+api.add_resource(stories_resource.StoriesResource, '/api/v2/stories/<int:stories_id>/<token>')
+api.add_resource(stories_resource.StoriesListResource, '/api/v2/all_stories/<token>')
 
 
 def abort_if_user_not_found(user_id):
@@ -208,7 +214,7 @@ class DelcateForm(FlaskForm):
 
 @app.route('/admin1234567', methods=['GET', 'POST'])
 def adminka():
-    global inform, token_adminki
+    global inform, TOKEN_ADMINKI
     categorid = pass_catal()[0]
     list_product = pass_catal()[1]
     id_treners = pass_treners()[0]
@@ -343,7 +349,6 @@ def adminka():
                 session.commit()
         except Exception as ex:
             abort(404, message=f'error {ex} prodel')
-
     if redcate_form.validate_on_submit():
         try:
             cate = session.query(Categories).get(int(redcate_form.idcate.data))
@@ -354,11 +359,9 @@ def adminka():
                         cate.name != redcate_form.namecate.data:
                     message_cate = f'Такая категория уже есть'
                 else:
-
-                            cate.name = redcate_form.namecate.data
-                            cate.products = redcate_form.productcate.data
-                            session.commit()
-
+                    cate.name = redcate_form.namecate.data
+                    cate.products = redcate_form.productcate.data
+                    session.commit()
         except Exception as ex:
             abort(404, message=f'error {ex} prodel')
     if delcate_form.validate_on_submit():
@@ -379,15 +382,6 @@ def adminka():
                            redprod_form=redprod_form, message_prod=message_prod, message_prodel=message_prodel,
                            message_cate=message_cate, message_delcate=message_delcate, redcate_form=redcate_form,
                            delcate_form=delcate_form, id_treners=id_treners)
-
-
-@app.route('/img', methods=['GET', 'POST'])
-def img():
-    global inform
-    form = fileForm()
-    if form.validate_on_submit():
-        open(form.FILE.data)
-    return render_template('img.html', form=form, title='img', inform=inform)
 
 
 @app.route('/buy/<int:user_id>/<int:product_id>/delete', methods=['GET', 'POST'])
@@ -428,7 +422,6 @@ def buy(user_id, product_id):
 @login_required
 def prof(id):
     global inform
-
     tokin_chek_form = Tokin_chek_Form()
     redprofnameform = RedprofnameForm()
     redprofloginform = RedprofloginForm()
@@ -440,18 +433,15 @@ def prof(id):
     user = session.query(User).get(current_user.id)
     message = None
     if tokin_chek_form.validate_on_submit():
-            if tokin_chek_form.tok.data == token_adminki:
-                user.admin_chek = True
-                session.commit()
-            else:
-                pass
+        if tokin_chek_form.tok.data == TOKEN_ADMINKI:
+            user.admin_chek = True
+            session.commit()
     if redprofnameform.validate_on_submit():
         try:
             user.name = redprofnameform.name.data
             session.commit()
         except Exception as er:
             abort(404, message=f"User {er} error redprof")
-
     if redprofloginform.validate_on_submit():
         try:
             if session.query(User).filter(User.login == redprofloginform.login.data).first():
@@ -461,7 +451,6 @@ def prof(id):
                 session.commit()
         except Exception as er:
             abort(404, message=f"User {er} error redprof")
-
     if redprofsurnameform.validate_on_submit():
         try:
             user.surname = redprofsurnameform.surname.data
@@ -489,7 +478,6 @@ def prof(id):
             session.commit()
         except Exception as er:
             abort(404, message=f"User {er} error redprof")
-
     categorid = pass_catal()[0]
     list_product = pass_catal()[1]
     id_treners = pass_treners()[0]
@@ -500,7 +488,6 @@ def prof(id):
                             stories.modified_date]
     lists_bascket = {}
     list_bascket = user.basket.split('|')
-    print(list_bascket)
     for item in list_bascket:
         for product in session.query(Product).filter(Product.id == int(item)):
             lists_bascket[product.id] = [product.name, product.product_img, product.info, product.coin, product.count]
@@ -586,11 +573,9 @@ def catalog_v(id):
     id_li_client = pass_treners()[1]
     categories = session.query(Categories).get(int(id))
     product_data = {}
-    print(list_product)
     for item in list_product[str(id)]:
         for product in session.query(Product).filter(Product.id == int(item)):
             product_data[product.id] = [product.name, product.product_img, product.info, product.coin, product.count]
-    print(product_data)
     return render_template('catalog_v.html', title=categories.name, categories=categories,
                            product_data=product_data, categorid=categorid,
                            inform=inform, id_treners=id_treners, id_li_client=id_li_client)
@@ -600,60 +585,12 @@ def catalog_v(id):
 @login_required
 def buy_product(id_catalog, id_product):
     user = session.query(User).get(current_user.id)
-    print('user', user.id)
     if str(id_product) in user.basket.split('|'):
-        print('s', id_product, user.basket.split('|'), current_user.id)
         pass
     else:
         user.basket += '|' + str(id_product)
         session.commit()
     return redirect(f"/catalog/{id_catalog}")
-
-# @app.route('/add_job/<int:id>', methods=['GET', 'POST'])
-# @login_required
-# def edit_jobs(id):
-#     form = AddjobsForm()
-#     if request.method == "GET":
-#         session = db_session.create_session()
-#         job = session.query(Jobs).filter(Jobs.id == id,
-#                                          Jobs.user == current_user).first()
-#         if job:
-#             job.team_leader = form.id_lead.data
-#             job.job = form.job.data
-#             job.work_size = form.w_size.data
-#             job.collaborators = form.coll.data
-#             job.is_finished = form.finished.data
-#         else:
-#             abort(404)
-#     if form.validate_on_submit():
-#         session = db_session.create_session()
-#         job = session.query(Jobs).filter(Jobs.id == id,
-#                                          Jobs.user == current_user).first()
-#         if job:
-#             job.team_leader = form.id_lead.data
-#             job.job = form.job.data
-#             job.work_size = form.w_size.data
-#             job.collaborators = form.coll.data
-#             job.is_finished = form.finished.data
-#             session.commit()
-#             return redirect('/works')
-#         else:
-#             abort(404)
-#     return render_template('jobs.html', title='Редактирование работ', form=form)
-
-
-# @app.route('/jobs_delete/<int:id>', methods=['GET', 'POST'])
-# @login_required
-# def news_delete(id):
-#     session = db_session.create_session()
-#     job = session.query(Jobs).filter(Jobs.id == id,
-#                                      Jobs.user == current_user).first()
-#     if job:
-#         session.delete(job)
-#         session.commit()
-#     else:
-#         abort(404)
-#     return redirect('/works')
 
 
 @app.route('/')
@@ -663,7 +600,6 @@ def start():
     list_product = pass_catal()[1]
     id_treners = pass_treners()[0]
     id_li_client = pass_treners()[1]
-
     return render_template('start.html', title='start', inform=inform, categorid=categorid,
                            list_product=list_product, id_treners=id_treners, id_li_client=id_li_client)
 
