@@ -34,8 +34,9 @@ class CatalogsListResource(Resource):
             for item in list_product:
                 try:
                     name = session.query(Product).get(int(item))
-                    names_prod[int(item)] = name.name
+                    if name is not None:
+                        names_prod[int(item)] = name.name
                 except Exception as ex:
-                    return jsonify({'error': ex})
+                    jsonify({'error': f'error catalog {ex}'})
             o.append({'id': int(categor.id), 'name': categor.name, 'products': names_prod})
         return jsonify({'catalog': o})

@@ -30,7 +30,7 @@ session = db_session.create_session()
 inform = session.query(Info).get(1)
 TOKEN_ADMINKI = 'secret_token0000'
 api.add_resource(catalog_resource.CatalogsResource, '/api/v2/catalog/<int:catalog_id>')
-api.add_resource(catalog_resource.CatalogsListResource, '/api/v2/catalog')
+api.add_resource(catalog_resource.CatalogsListResource, '/api/v2/catalogs')
 api.add_resource(users_resource.UsersResource, '/api/v2/user/<int:user_id>/<token>')
 api.add_resource(users_resource.UsersListResource, '/api/v2/user/<token>')
 api.add_resource(trainers_resource.TrainersResource, '/api/v2/trainer/<int:trainer_id>')
