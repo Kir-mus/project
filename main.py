@@ -94,11 +94,6 @@ class Tokin_chek_Form(FlaskForm):
     chek = SubmitField('применить')
 
 
-class fileForm(FlaskForm):
-    FILE = FileField('FILE', validators=[DataRequired()])
-    submit = SubmitField('применить')
-
-
 class RegisterForm(FlaskForm):
     login = StringField('login', validators=[DataRequired()])
     surname = StringField('surname', validators=[DataRequired()])
@@ -330,7 +325,7 @@ def adminka():
             else:
                 if session.query(Product).filter(Product.name == redprod_form.namep.data).first() and \
                         prodct.name != redprod_form.namep.data:
-                    message_prod = f'Такогй Product уже есть'
+                    message_prod = f'Такой Product уже есть'
                 else:
                     prodct.name = redprod_form.namep.data
                     prodct.info = redprod_form.infoo.data
@@ -573,12 +568,15 @@ def catalog_v(id):
     id_li_client = pass_treners()[1]
     categories = session.query(Categories).get(int(id))
     product_data = {}
-    for item in list_product[str(id)]:
-        for product in session.query(Product).filter(Product.id == int(item)):
-            product_data[product.id] = [product.name, product.product_img, product.info, product.coin, product.count]
-    return render_template('catalog_v.html', title=categories.name, categories=categories,
-                           product_data=product_data, categorid=categorid,
-                           inform=inform, id_treners=id_treners, id_li_client=id_li_client)
+    try:
+        for item in list_product[str(id)]:
+            for product in session.query(Product).filter(Product.id == int(item)):
+                product_data[product.id] = [product.name, product.product_img, product.info, product.coin, product.count]
+        return render_template('catalog_v.html', title=categories.name, categories=categories,
+                               product_data=product_data, categorid=categorid,
+                               inform=inform, id_treners=id_treners, id_li_client=id_li_client)
+    except Exception as ex:
+        return abort(404, message=f'error catalog fond {ex}')
 
 
 @app.route('/catalog/<int:id_catalog>/in_bascket/<int:id_product>')
